@@ -1,6 +1,8 @@
 const path = require('path');
-const { randomName } = require('../helpers/libs');
 const fs = require('fs-extra');
+
+const { randomName } = require('../helpers/libs');
+const { Image, Comment } = require('../models');
 
 const ctrl = {}
 
@@ -8,15 +10,34 @@ ctrl.index = (req, res) => {
 
 };
 
-ctrl.create = async(req, res) => {
-    const extension = path.extname(req.file.originalname).toLowerCase();
-    const imageTempPath = req.file.path;
-    const targetPath = path.resolve(`src/public/upload/${randomName()}${extension}`);
+ctrl.create = (req, res) => {
+    const saveImage = async() => {
+        const imgUrl = randomName();
+        const images = await Image.find({ filename: imgUrl });
+        if (images.length > 0) {
+            saveImage()
+        } else {
+            const imageTempPath = req.file.path;
+            const ext = path.extname(req.file.originalname).toLowerCase();
+            const targetPath = path.resolve(`src/public/upload/${imgUrl}${ext}`);
 
-    if (extension === '.png' || extension === '.jpg' || extension === '.jpeg' || extension === '.gif') {
-        await fs.rename(imageTempPath, targetPath);
-    }
-    res.send('works!');
+            if (ext === '.png' || ext === '.jpg' || ext === '.jpeg' || ext === '.gif') {
+                await fs.rename(imageTempPath, targetPath);
+                const newImg = new Image({
+                    title: req.body.title,
+                    filename: imgUrl + ext,
+                    description: req.body.description
+                });
+                const imageSaved = await newImg.save();
+                res.redirect('/images/' + imageSaved.uniqueId);
+            } else {
+                await fs.unlink(imageTempPath);
+                res.status(500).json({ error: 'Only Images are allowed' });
+            }
+        }
+    };
+
+    saveImage();
 };
 
 ctrl.like = (req, res) => {
