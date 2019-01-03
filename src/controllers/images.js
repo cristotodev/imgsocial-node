@@ -8,9 +8,19 @@ const { Image, Comment } = require('../models');
 const ctrl = {}
 
 ctrl.index = async(req, res) => {
+    const viewModels = { image: {}, comments: {} };
     const image = await Image.findOne({ filename: { $regex: req.params.image_id } });
-    const comments = await Comment.find({ image_id: image._id });
-    res.render('image', { image, comments });
+    if (image) {
+        image.views++;
+        viewModels.image = image;
+        await image.save();
+        const comments = await Comment.find({ image_id: image._id });
+        viewModels.comments = comments;
+        res.render('image', viewModels);
+    } else {
+        res.redirect('/')
+    }
+
 };
 
 ctrl.create = (req, res) => {
@@ -43,8 +53,15 @@ ctrl.create = (req, res) => {
     saveImage();
 };
 
-ctrl.like = (req, res) => {
-
+ctrl.like = async(req, res) => {
+    const image = await Image.findOne({ filename: { $regex: req.params.image_id } });
+    if (image) {
+        image.likes++;
+        await image.save();
+        res.json({ likes: image.likes });
+    } else {
+        res.status(500).json({ error: 'Internal Error' })
+    }
 };
 
 ctrl.comment = async(req, res) => {
@@ -53,11 +70,11 @@ ctrl.comment = async(req, res) => {
         const newComment = new Comment(req.body);
         newComment.gravatar = md5(newComment.email)
         newComment.image_id = image._id;
-        newComment.save();
+        await newComment.save();
         res.redirect(`/images/${image.uniqueId}`)
+    } else {
+        res.redirect('/');
     }
-
-    res.send("a");
 };
 
 ctrl.delete = (req, res) => {
