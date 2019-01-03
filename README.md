@@ -1,6 +1,6 @@
 # Requirements
 
-To use this program or modify it, you need [node](https://nodejs.org/es/) on your system and install all dependencies.
+To use this program or modify it, you need [node](https://nodejs.org/es/), [mongo](https://www.mongodb.com/es) and install all dependencies.
 
 
 
