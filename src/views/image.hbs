@@ -15,7 +15,7 @@
                 <i class="fas fa-thumbs-up"></i> Like
             </button>
             <p>
-                <span class="likes-count">{{images.likes}}</span>
+                <span class="likes-count">{{image.likes}}</span>
                 <i class="fas fa-heart"></i>
             </p>
             <p>
@@ -36,7 +36,7 @@
         </button>
     </div>
     <div class="card-body">
-        <blockquote>
+        <blockquote id="post-comment">
             <form action="/images/{{image.uniqueId}}/comment" method="POST">
                 <div class="form-group">
                     <input type="text" name="name" class="form-control" placeholder="Name">
