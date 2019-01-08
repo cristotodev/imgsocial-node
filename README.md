@@ -1,4 +1,4 @@
-# IMG Socil
+# IMG Social
 
 Social network to share images with other people, comment them and valorate. 
 
