@@ -22,7 +22,7 @@ node src/index.js
 Then put on your browser the next url and you never forgot nothing!
 
 ```
-localhost:300
+localhost:3000
 ```
 
 ### Enjoy!
