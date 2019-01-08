@@ -1,10 +1,14 @@
-# Requirements
+# IMG Socil
+
+Social network to share images with other people, comment them and valorate. 
+
+## Requirements
 
 To use this program or modify it, you need [node](https://nodejs.org/es/), [mongo](https://www.mongodb.com/es) and install all dependencies.
 
 
 
-# Quick start
+## Quick start
 
 The following command install all necesaries dependencies.
 
